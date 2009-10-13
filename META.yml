@@ -1,0 +1,41 @@
+---
+abstract: 'Locale::Country related constraints and coercions for Moose'
+author:
+  - "MORIYA Masaki (\"Gardejo\") <moriya at ermitejo dot com>"
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+  Module::Install: 0.80
+  Module::Load: 0
+  Test::Class: 0
+  Test::Exception: 0.27
+  Test::More: 0
+  Test::Warn: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
+distribution_type: module
+generated_by: 'Module::Install version 0.910'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+module_name: MooseX::Types::Locale::Country
+name: MooseX-Types-Locale-Country
+no_index:
+  directory:
+    - examples
+    - inc
+    - t
+    - xt
+requires:
+  Filter::Util::Call: 0
+  Locale::Country: 0
+  Moose: 0.41
+  MooseX::Types: 0.19
+  namespace::clean: 0.08
+  perl: 5.8.1
+resources:
+  bugtracker: http://github.com/gardejo/p5-moosex-types-locale-country/issues
+  homepage: http://github.com/gardejo/p5-moosex-types-locale-country
+  license: http://dev.perl.org/licenses/
+  repository: git://github.com/gardejo/p5-moosex-types-locale-country.git
+version: 0.000
