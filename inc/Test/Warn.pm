@@ -1,5 +1,5 @@
 #line 1
-#line 219
+#line 237
 
 
 package Test::Warn;
@@ -8,10 +8,10 @@ use 5.006;
 use strict;
 use warnings;
 
-use Array::Compare;
+#use Array::Compare;
 use Sub::Uplevel 0.12;
 
-our $VERSION = '0.11';
+our $VERSION = '0.21';
 
 require Exporter;
 
@@ -26,12 +26,17 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(
     warning_is   warnings_are
     warning_like warnings_like
+    warnings_exist
 );
 
 use Test::Builder;
 my $Tester = Test::Builder->new;
 
+{
+no warnings 'once';
 *warning_is = *warnings_are;
+*warning_like = *warnings_like;
+}
 
 sub warnings_are (&$;$) {
     my $block       = shift;
@@ -51,7 +56,6 @@ sub warnings_are (&$;$) {
     return $ok;
 }
 
-*warning_like = *warnings_like;
 
 sub warnings_like (&$;$) {
     my $block       = shift;
@@ -62,6 +66,32 @@ sub warnings_like (&$;$) {
     local $SIG{__WARN__} = sub {
         my ($called_from) = caller(0);  # to find out Carping methods
         push @got_warning, _canonical_got_warning($called_from, shift());
+    };
+    uplevel 1,$block;
+    my $ok = _cmp_like( \@got_warning, \@exp_warning );
+    $Tester->ok( $ok, $testname );
+    $ok or _diag_found_warning(@got_warning),
+           _diag_exp_warning(@exp_warning);
+    return $ok;
+}
+
+sub warnings_exist (&$;$) {
+    my $block       = shift;
+    my @exp_warning = map {_canonical_exp_warning($_)}
+                          _to_array_if_necessary( shift() || [] );
+    my $testname    = shift;
+    my @got_warning = ();
+    local $SIG{__WARN__} = sub {
+        my ($called_from) = caller(0);  # to find out Carping methods
+        my $wrn_text=shift;
+        my $wrn_rec=_canonical_got_warning($called_from, $wrn_text);
+        foreach my $wrn (@exp_warning) {
+          if (_cmp_got_to_exp_warning_like($wrn_rec,$wrn)) {
+            push @got_warning, $wrn_rec;
+            return;
+          }
+        }
+        warn $wrn_text;
     };
     uplevel 1,$block;
     my $ok = _cmp_like( \@got_warning, \@exp_warning );
@@ -98,7 +128,7 @@ sub _cmp_got_to_exp_warning {
     my ($got_kind, $got_msg) = %{ shift() };
     my ($exp_kind, $exp_msg) = %{ shift() };
     return 0 if ($got_kind eq 'warn') && ($exp_kind eq 'carped');
-    my $cmp = $got_msg =~ /^\Q$exp_msg\E at \S+ line \d+\.?$/;
+    my $cmp = $got_msg =~ /^\Q$exp_msg\E at .+ line \d+\.?$/;
     return $cmp;
 }
 
@@ -106,7 +136,7 @@ sub _cmp_got_to_exp_warning_like {
     my ($got_kind, $got_msg) = %{ shift() };
     my ($exp_kind, $exp_msg) = %{ shift() };
     return 0 if ($got_kind eq 'warn') && ($exp_kind eq 'carped');
-    if (my $re = $Tester->maybe_regex($exp_msg)) {
+    if (my $re = $Tester->maybe_regex($exp_msg)) { #qr// or '//'
         my $cmp = $got_msg =~ /$re/;
         return $cmp;
     } else {
@@ -157,7 +187,7 @@ sub _diag_exp_warning {
     $Tester->diag( "didn't expect to find a warning" ) unless @_;
 }
 
-package Tree::MyDAG_Node;
+package Test::Warn::DAG_Node_Tree;
 
 use strict;
 use warnings;
@@ -203,7 +233,7 @@ package Test::Warn::Categorization;
 
 use Carp;
 
-our $tree = Tree::MyDAG_Node->nice_lol_to_tree(
+our $tree = Test::Warn::DAG_Node_Tree->nice_lol_to_tree(
    all => [ 'closure',
             'deprecated',
             'exiting',
@@ -254,7 +284,7 @@ our $tree = Tree::MyDAG_Node->nice_lol_to_tree(
 );
 
 sub _warning_category_regexp {
-    my $sub_tree = $tree->depthsearch(shift()) or return undef;
+    my $sub_tree = $tree->depthsearch(shift()) or return;
     my $re = join "|", map {$_->name} $sub_tree->leaves_under;
     return qr/(?=\w)$re/;
 }
@@ -262,7 +292,7 @@ sub _warning_category_regexp {
 sub warning_like_category {
     my ($warning, $category) = @_;
     my $re = _warning_category_regexp($category) or 
-        carp("Unknown warning category '$category'"),return undef;
+        carp("Unknown warning category '$category'"),return;
     my $ok = $warning =~ /$re/;
     return $ok;
 }

@@ -14,12 +14,13 @@ my $application_root_module = 'lib/MooseX/Types/Locale/Country.pm';
 all_from        $application_root_module;
 
 # supplement
-author          'MORIYA Masaki ("Gardejo") <moriya at ermitejo dot com>';
+author          'MORIYA Masaki (a.k.a. Gardejo) <moriya at cpan dot org>';
 resources (
     repository
         => 'git://github.com/gardejo/p5-moosex-types-locale-country.git',
     bugtracker
-        => 'http://github.com/gardejo/p5-moosex-types-locale-country/issues',
+        => 'http://rt.cpan.org/Public/Dist/Display.html?Name='
+         . 'MooseX-Types-Locale-Country',
     homepage
         => 'http://github.com/gardejo/p5-moosex-types-locale-country',
 );
@@ -81,27 +82,30 @@ Makefile.PL - Makefile builder for MooseX-Types-Locale-Country
 
 =head1 SYNOPSIS
 
-    $ cpan -t .
-    $ cpan -i .
+    % cpan -t .
+    % cpan -i .
 
 =head1 AUTHOR
 
 =over 4
 
-=item MORIYA Masaki ("Gardejo")
+=item MORIYA Masaki (a.k.a. Gardejo)
 
-C<< <moriya at ermitejo dot com> >>,
+C<< <moriya at cpan dot org> >>,
 L<http://ttt.ermitejo.com/>
 
 =back
 
-=head1 LICENSE AND COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2009 by MORIYA Masaki ("Gardejo"),
-L<http://ttt.ermitejo.com>.
+Copyright (c) 2009 by MORIYA Masaki (a.k.a. Gardejo),
+L<http://ttt.ermitejo.com/>.
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
-See L<perlgpl> and L<perlartistic>.
+See L<perlgpl|perlgpl> and L<perlartistic|perlartistic>.
+
+The full text of the license can be found in the F<LICENSE> file
+included with this distribution.
 
 =cut

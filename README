@@ -11,17 +11,17 @@ To install this distribution,
 first, to make Makefile, build this distribution and run tests
 by the following command:
 
-    cpan -t .
+    % cpan -t .
 
 next, to deploy this distribution
 by the following command:
 
-    cpan -i .
+    % cpan -i .
 
 DEPENDENCIES
 ------------
 
-See C<Makefile.PL>.
+See "Makefile.PL".
 
 DESCRIPTION
 -----------
@@ -35,16 +35,20 @@ See further document of this distribution by the following commands:
 AUTHOR
 ------
 
-MORIYA Masaki ("Gardejo")
+MORIYA Masaki (a.k.a. Gardejo)
 
-    <moriya at ermitejo dot com>, http://ttt.ermitejo.com/
+    <moriya at cpan dot org>,
+    http://ttt.ermitejo.com/
 
-LICENSE AND COPYRIGHT
+COPYRIGHT AND LICENSE
 ---------------------
 
-Copyright (c) 2009 by MORIYA Masaki ("Gardejo"),
-L<http://ttt.ermitejo.com>.
+Copyright (c) 2009 by MORIYA Masaki (a.k.a. Gardejo),
+http://ttt.ermitejo.com/
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
 See perlgpl and perlartistic.
+
+The full text of the license can be found in the "LICENSE" file
+included with this distribution.

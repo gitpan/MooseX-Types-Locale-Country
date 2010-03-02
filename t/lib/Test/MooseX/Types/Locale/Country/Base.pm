@@ -24,13 +24,14 @@ use base qw(
 
 use Test::Exception;
 use Test::More;
+use Test::Warn;
 
 
 # ****************************************************************
 # test(s)
 # ****************************************************************
 
-sub test_new : Tests(6) {
+sub test_new : Tests(16) {
     my $self = shift;
 
     my $mock_class = $self->mock_class;
@@ -76,6 +77,12 @@ sub test_exceptions_of_constraints {
             $mock_class->new( $attribute => 'junk!!' )
         } $message_pattern,
             => "Constraint of ($attribute)";
+        warning_is {
+            dies_ok {
+                $mock_class->new( $attribute => undef );
+            } 'expecting to die';
+        } undef,
+            'no warnings to assign undef';
     }
 
     return;
@@ -146,27 +153,31 @@ Test::MooseX::Types::Locale::Country::Base - Testing baseclass for MooseX::Types
 
 =head1 DESCRIPTION
 
-This module tests L<MooseX::Types::Locale::Country> and
-L<MooseX::Types::Locale::Country::Fast>.
+This module tests
+L<MooseX::Types::Locale::Country|MooseX::Types::Locale::Country> and
+L<MooseX::Types::Locale::Country::Fast|MooseX::Types::Locale::Country::Fast>.
 
 =head1 AUTHOR
 
 =over 4
 
-=item MORIYA Masaki ("Gardejo")
+=item MORIYA Masaki (a.k.a. Gardejo)
 
-C<< <moriya at ermitejo dot com> >>,
+C<< <moriya at cpan dot org> >>,
 L<http://ttt.ermitejo.com/>
 
 =back
 
-=head1 LICENSE AND COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2009 by MORIYA Masaki ("Gardejo"),
-L<http://ttt.ermitejo.com>.
+Copyright (c) 2009 by MORIYA Masaki (a.k.a. Gardejo),
+L<http://ttt.ermitejo.com/>.
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
-See L<perlgpl> and L<perlartistic>.
+See L<perlgpl|perlgpl> and L<perlartistic|perlartistic>.
+
+The full text of the license can be found in the F<LICENSE> file
+included with this distribution.
 
 =cut

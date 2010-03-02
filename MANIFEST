@@ -1,6 +1,5 @@
 .gitignore
 Changes
-coverage
 coverage.bat
 coverage.sh
 examples/alpha2.pl
@@ -37,13 +36,18 @@ LICENSE
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
-META.yml			Module meta-data (added by Module::Install)
+META.yml
 README
 t/00_normal.t
+t/01_normal_getopt.t
 t/10_fast.t
+t/11_fast_getopt.t
 t/lib/Test/MooseX/Types/Locale/Country.pm
 t/lib/Test/MooseX/Types/Locale/Country/Base.pm
+t/lib/Test/MooseX/Types/Locale/Country/Base/Getopt.pm
 t/lib/Test/MooseX/Types/Locale/Country/Fast.pm
+t/lib/Test/MooseX/Types/Locale/Country/Fast/Getopt.pm
+t/lib/Test/MooseX/Types/Locale/Country/Getopt.pm
 xt/meta.t
 xt/no_tabs.t
 xt/perlcritic.t

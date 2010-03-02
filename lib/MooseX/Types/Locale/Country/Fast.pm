@@ -7,7 +7,7 @@ package MooseX::Types::Locale::Country::Fast;
 
 use 5.008_001;
 # MooseX::Types turns strict/warnings pragmas on,
-# however, kwalitee can not detect such mechanism.
+# however, kwalitee scorer can not detect such mechanism.
 # (Perl::Critic can it, with equivalent_modules parameter)
 use strict;
 use warnings;
@@ -39,7 +39,7 @@ use namespace::clean;
 # public class variable(s)
 # ****************************************************************
 
-our $VERSION = "0.000";
+our $VERSION = "0.01";
 
 
 # ****************************************************************
@@ -56,8 +56,10 @@ foreach my $subtype (CountryCode, Alpha2Country) {
                 code2country($_, LOCALE_CODE_ALPHA_2);
             },
             message {
-                "Validation failed for code failed with value ($_) because: " .
-                "Specified country code does not exist in ISO 3166-1 alpha-2";
+                sprintf 'Validation failed for code failed with value (%s) '
+                      . 'because specified country code does not exist '
+                      . 'in ISO 3166-1 alpha-2',
+                    defined $_ ? $_ : q{};
             };
 }
 
@@ -70,8 +72,10 @@ subtype Alpha3Country,
             code2country($_, LOCALE_CODE_ALPHA_3);
         },
         message {
-            "Validation failed for code failed with value ($_) because: " .
-            "Specified country code does not exist in ISO 3166-1 alpha-3";
+            sprintf 'Validation failed for code failed with value (%s) '
+                  . 'because specified country code does not exist '
+                  . 'in ISO 3166-1 alpha-3',
+                defined $_ ? $_ : q{};
         };
 
 # ----------------------------------------------------------------
@@ -83,8 +87,10 @@ subtype NumericCountry,
             code2country($_, LOCALE_CODE_NUMERIC);
         },
         message {
-            "Validation failed for code failed with value ($_) because: " .
-            "Specified country code does not exist in ISO 3166-1 numeric";
+            sprintf 'Validation failed for code failed with value (%s) '
+                  . 'because specified country code does not exist '
+                  . 'in ISO 3166-1 numeric',
+                defined $_ ? $_ : q{};
         };
 
 # ----------------------------------------------------------------
@@ -96,9 +102,25 @@ subtype CountryName,
             country2code($_);
         },
         message {
-            "Validation failed for name failed with value ($_) because: " .
-            "Specified country name does not exist in ISO 3166-1";
+            sprintf 'Validation failed for name failed with value (%s) '
+                  . 'because specified country name does not exist '
+                  . 'in ISO 3166-1',
+                defined $_ ? $_ : q{};
         };
+
+
+# ****************************************************************
+# optionally add Getopt option type
+# ****************************************************************
+
+eval { require MooseX::Getopt; };
+if (!$@) {
+    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
+        for (CountryCode, Alpha2Country, Alpha3Country, CountryName);
+    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=i', )
+        for (NumericCountry);
+}
+
 
 # ****************************************************************
 # return true
@@ -161,11 +183,13 @@ MooseX::Types::Locale::Country::Fast - Locale::Country related constraints for M
 
 =head1 DESCRIPTION
 
-This module packages several L<Moose::Util::TypeConstraints>,
-designed to work with the values of L<Locale::Country>.
+This module packages several
+L<Moose::Util::TypeConstraints|Moose::Util::TypeConstraints>,
+designed to work with the values of L<Locale::Country|Locale::Country>.
 
 This module does not provide coercions.
-Therefore, it works faster than L<MooseX::Types::Locale::Country>.
+Therefore, it works faster than
+L<MooseX::Types::Locale::Country|MooseX::Types::Locale::Country>.
 
 =head1 CONSTRAINTS
 
@@ -196,15 +220,28 @@ A subtype of C<Str>, which should be defined in ISO 3166-1 country name.
 
 =back
 
+=head1 NOTE
+
+=head2 The type mapping of L<MooseX::Getopt|MooseX::Getopt>
+
+This module provides the optional type mapping of
+L<MooseX::Getopt|MooseX::Getopt>
+when L<MooseX::Getopt|MooseX::Getopt> was installed.
+
+C<CountryCode>, C<Alpha2Country>, C<Alpha3Country> and C<CountryName> are
+C<String> (C<"=s">) type.
+
+C<NumericCountry> is C<Int> (C<"=i">) type.
+
 =head1 SEE ALSO
 
 =over 4
 
-=item * L<Locale::Country>
+=item * L<Locale::Country|Locale::Country>
 
-=item * L<MooseX::Types::Locale::Country>
+=item * L<MooseX::Types::Locale::Country|MooseX::Types::Locale::Country>
 
-=item * L<MooseX::Types::Locale::Language::Fast>
+=item * L<MooseX::Types::Locale::Language::Fast|MooseX::Types::Locale::Language::Fast>
 
 =back
 
@@ -221,7 +258,7 @@ No bugs have been reported.
 Please report any found bugs, feature requests, and ideas for improvements
 to C<bug-moosex-types-locale-Country at rt.cpan.org>,
 or through the web interface
-at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Types-Locale-Country>.
+at L<http://rt.cpan.org/Public/Bug/Report.html?Queue=MooseX-Types-Locale-Country>.
 I will be notified, and then you'll automatically be notified of progress
 on your bugs/requests as I make changes.
 
@@ -242,7 +279,7 @@ You can also look for information at:
 
 =item RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Types-Locale-Country>
+L<http://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Types-Locale-Country>
 
 =item AnnoCPAN: Annotated CPAN documentation
 
@@ -254,7 +291,7 @@ L<http://search.cpan.org/dist/MooseX-Types-Locale-Country>
 
 =item CPAN Ratings
 
-L<http://cpanratings.perl.org/d/MooseX-Types-Locale-Country>
+L<http://cpanratings.perl.org/dist/MooseX-Types-Locale-Country>
 
 =back
 
@@ -268,20 +305,23 @@ L<git://github.com/gardejo/p5-moosex-types-locale-Country.git>.
 
 =over 4
 
-=item MORIYA Masaki ("Gardejo")
+=item MORIYA Masaki (a.k.a. Gardejo)
 
-C<< <moriya at ermitejo dot com> >>,
+C<< <moriya at cpan dot org> >>,
 L<http://ttt.ermitejo.com/>
 
 =back
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2009 by MORIYA Masaki ("Gardejo"),
-L<http://ttt.ermitejo.com>.
+Copyright (c) 2009 by MORIYA Masaki (a.k.a. Gardejo),
+L<http://ttt.ermitejo.com/>.
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
-See L<perlgpl> and L<perlartistic>.
+See L<perlgpl|perlgpl> and L<perlartistic|perlartistic>.
+
+The full text of the license can be found in the F<LICENSE> file
+included with this distribution.
 
 =cut

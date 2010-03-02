@@ -7,7 +7,7 @@ package MooseX::Types::Locale::Country;
 
 use 5.008_001;
 # MooseX::Types turns strict/warnings pragmas on,
-# however, kwalitee can not detect such mechanism.
+# however, kwalitee scorer can not detect such mechanism.
 # (Perl::Critic can it, with equivalent_modules parameter)
 use strict;
 use warnings;
@@ -39,14 +39,14 @@ use namespace::clean;
 # public class variable(s)
 # ****************************************************************
 
-our $VERSION = "0.000";
+our $VERSION = "0.01";
 
 
 # ****************************************************************
 # private class variable(s)
 # ****************************************************************
 
-# Because code2country($_) cannot coerce 'JA' to 'ja'.
+# Because code2country($_) cannot coerce 'JP' to 'jp'.
 my %alpha2;
 @alpha2{ map { uc } all_country_codes(LOCALE_CODE_ALPHA_2) } = ();
 
@@ -72,8 +72,10 @@ foreach my $subtype (CountryCode, Alpha2Country) {
                 exists $alpha2{$_};
             },
             message {
-                "Validation failed for code failed with value ($_) because: " .
-                "Specified country code does not exist in ISO 3166-1 alpha-2";
+                sprintf 'Validation failed for code failed with value (%s) '
+                      . 'because specified country code does not exist '
+                      . 'in ISO 3166-1 alpha-2',
+                    defined $_ ? $_ : q{};
             };
 
     coerce $subtype,
@@ -94,8 +96,10 @@ subtype Alpha3Country,
             exists $alpha3{$_};
         },
         message {
-            "Validation failed for code failed with value ($_) because: " .
-            "Specified country code does not exist in ISO 3166-1 alpha-3";
+            sprintf 'Validation failed for code failed with value (%s) '
+                  . 'because specified country code does not exist '
+                  . 'in ISO 3166-1 alpha-3',
+                defined $_ ? $_ : q{};
         };
 
 coerce Alpha3Country,
@@ -115,8 +119,10 @@ subtype NumericCountry,
             code2country($_, LOCALE_CODE_NUMERIC);
         },
         message {
-            "Validation failed for code failed with value ($_) because: " .
-            "Specified country code does not exist in ISO 3166-1 numeric";
+            sprintf 'Validation failed for code failed with value (%s) '
+                  . 'because specified country code does not exist '
+                  . 'in ISO 3166-1 numeric',
+                defined $_ ? $_ : q{};
         };
 
 # ----------------------------------------------------------------
@@ -128,8 +134,10 @@ subtype CountryName,
             exists $name{$_};
         },
         message {
-            "Validation failed for name failed with value ($_) because: " .
-            "Specified country name does not exist in ISO 3166-1";
+            sprintf 'Validation failed for name failed with value (%s) '
+                  . 'because specified country name does not exist '
+                  . 'in ISO 3166-1',
+                defined $_ ? $_ : q{};
         };
 
 coerce CountryName,
@@ -141,6 +149,19 @@ coerce CountryName,
             #   to use it in exception message.
             return code2country( country2code($_) ) || $_;
         };
+
+
+# ****************************************************************
+# optionally add Getopt option type
+# ****************************************************************
+
+eval { require MooseX::Getopt; };
+if (!$@) {
+    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
+        for (CountryCode, Alpha2Country, Alpha3Country, CountryName);
+    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=i', )
+        for (NumericCountry);
+}
 
 
 # ****************************************************************
@@ -204,8 +225,9 @@ MooseX::Types::Locale::Country - Locale::Country related constraints and coercio
 
 =head1 DESCRIPTION
 
-This module packages several L<Moose::Util::TypeConstraints> with coercions,
-designed to work with the values of L<Locale::Country>.
+This module packages several
+L<Moose::Util::TypeConstraints|Moose::Util::TypeConstraints> with coercions,
+designed to work with the values of L<Locale::Country|Locale::Country>.
 
 =head1 CONSTRAINTS AND COERCIONS
 
@@ -216,7 +238,7 @@ designed to work with the values of L<Locale::Country>.
 A subtype of C<Str>, which should be defined in country code of ISO 3166-1
 alpha-2.
 If you turned C<coerce> on, C<Str> will be upper-case.
-For example, C<'ja'> will convert to C<'JA'>.
+For example, C<'jp'> will convert to C<'JP'>.
 
 =item C<CountryCode>
 
@@ -242,21 +264,64 @@ For example, C<'JAPAN'> will convert to C<'Japan'>.
 
 =back
 
+=head1 NOTE
+
+=head2 Code conversion is not supported
+
+These coercions is not support code conversion.
+For example, from C<Alpha2Country> to C<Alpha3Country>.
+
+    has country
+        => ( is => 'rw', isa => Alpha2Country, coerce => 1 );
+
+    ...
+
+    $foo->country('US');    # does not convert to 'USA'
+
+If you want conversion, could you implement an individual country class
+with several attributes?
+
+See C</examples/complex.pl> in the distribution for more details.
+
+=head2 The type mapping of L<MooseX::Getopt|MooseX::Getopt>
+
+This module provides the optional type mapping of
+L<MooseX::Getopt|MooseX::Getopt>
+when L<MooseX::Getopt|MooseX::Getopt> was installed.
+
+C<CountryCode>, C<Alpha2Country>, C<Alpha3Country> and C<CountryName> are
+C<String> (C<"=s">) type.
+
+C<NumericCountry> is C<Int> (C<"=i">) type.
+
 =head1 SEE ALSO
 
 =over 4
 
-=item * L<Locale::Country>
+=item * L<Locale::Country|Locale::Country>
 
-=item * L<MooseX::Types::Locale::Country::Fast>
+=item * L<MooseX::Types::Locale::Country::Fast|MooseX::Types::Locale::Country::Fast>
 
-=item * L<MooseX::Types::Locale::Language>
+=item * L<MooseX::Types::Locale::Language|MooseX::Types::Locale::Language>
 
 =back
 
 =head1 INCOMPATIBILITIES
 
 None reported.
+
+=head1 TO DO
+
+=over 4
+
+=item * I may add grammatical aliases of constraints/coercions.
+        For example, C<CountryAsAlpha2> as existent C<Alpha2Country>.
+
+=item * I may add namespased types.
+        For example, C<'Locale::Country::Alpha2'> as export type
+        C<Alpha2Country>.
+
+=back
 
 =head1 BUGS AND LIMITATIONS
 
@@ -267,7 +332,8 @@ No bugs have been reported.
 Please report any found bugs, feature requests, and ideas for improvements
 to C<bug-moosex-types-locale-country at rt.cpan.org>,
 or through the web interface
-at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Types-Locale-Country>.
+at L<http://rt.cpan.org/Public/Bug/Report.html?Queue=MooseX-Types-Locale-Country>.
+
 I will be notified, and then you'll automatically be notified of progress
 on your bugs/requests as I make changes.
 
@@ -288,7 +354,7 @@ You can also look for information at:
 
 =item RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Types-Locale-Country>
+L<http://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Types-Locale-Country>
 
 =item AnnoCPAN: Annotated CPAN documentation
 
@@ -300,7 +366,7 @@ L<http://search.cpan.org/dist/MooseX-Types-Locale-Country>
 
 =item CPAN Ratings
 
-L<http://cpanratings.perl.org/d/MooseX-Types-Locale-Country>
+L<http://cpanratings.perl.org/dist/MooseX-Types-Locale-Country>
 
 =back
 
@@ -314,20 +380,23 @@ L<git://github.com/gardejo/p5-moosex-types-locale-country.git>.
 
 =over 4
 
-=item MORIYA Masaki ("Gardejo")
+=item MORIYA Masaki (a.k.a. Gardejo)
 
-C<< <moriya at ermitejo dot com> >>,
+C<< <moriya at cpan dot org> >>,
 L<http://ttt.ermitejo.com/>
 
 =back
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2009 by MORIYA Masaki ("Gardejo"),
-L<http://ttt.ermitejo.com>.
+Copyright (c) 2009 by MORIYA Masaki (a.k.a. Gardejo),
+L<http://ttt.ermitejo.com/>.
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
-See L<perlgpl> and L<perlartistic>.
+See L<perlgpl|perlgpl> and L<perlartistic|perlartistic>.
+
+The full text of the license can be found in the F<LICENSE> file
+included with this distribution.
 
 =cut

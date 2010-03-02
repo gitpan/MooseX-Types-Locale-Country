@@ -5,10 +5,45 @@ This file documents the revision history for Perl distribution
 VERSION HISTORY
 ===============
 
+0.01 : Released on 2009-03-03 (JST)
+-----------------------------------
+
+### Features
+
+#### `MooseX::Types::Locale::Country` and `MooseX::Types::Locale::Country::Fast`
+
+-   Added type mapping for `MooseX::Getopt`.
+
+### Bug fixes
+
+#### `MooseX::Types::Locale::Country` and `MooseX::Types::Locale::Country::Fast`
+
+-   No warnings to assign undefined value.
+
+### Documents
+
+#### `Changes`
+
+-   Modified version notation to explain guide of upgrade.
+
+#### `MooseX::Types::Locale::Country`
+
+-   Refered to `/examples/complex.pl` to explain that code conversion is not
+    supported.
+
+### Others
+
+-   Changed the bugtracker URI on Makefile.PL from GitHub to CPAN RT.
+
+-   Removed nonexistent `coverage` file from `MANIFEST`.
+
+
 0.000 : Released on 2009-10-14 (JST)
 ------------------------------------
 
 Initial version.
+
+(Regarded as version 0.00)
 
 This version kept in step with `MooseX::Types::Locale::Language` 0.003.
 
@@ -52,27 +87,37 @@ META INFORMATION
 
 Version notation
 ----------------
-
-    V.vvv_rrr : Released on YYYY-MM-DD
+    V.vvrr_dd : Released on YYYY-MM-DD
 
 ### V  : Major version number
 
--   Added ambitious feature(s)
--   Changed in API(s)
+-   Added ambitious features
+-   Changed in APIs
+    (older API will be keeped to compatibility for a some period)
 -   ...
 
-### vvv : Minor version number (in major version)
+### vv : Minor version number (in major version)
 
--   Added several feature(s)
--   Improved any feature(s)
--   Fixed bug(s)
--   Improved test(s)
--   Updated document(s)
+-   Added several features
+-   Improved any features
+-   Fixed bugs
 -   ...
 
-### rrr : Revision number (in minor version, on demand)
+### rr : Revision number (in minor version, on demand)
 
--   A developer release
+You would not need to update the distribution.
+
+-   Improved tests
+-   Updated documents
+
+### dd : Developer release number (in revision number, on demand)
+
+This is unstable version.
+Unless you are a developer, You will not be recommended to upgrade
+the distribution.
+
+-   Added experimental features
+-   Fixed bugs provisionally
 
 
 Document format
@@ -80,5 +125,5 @@ Document format
 
 This `Changes` file was formatted in Markdown.
 
-    $ perl -MText::Markdown -MFile::Slurp -e \\
+    $ perl -MText::Markdown -MFile::Slurp -e \
       'print (Text::Markdown->new->markdown(scalar read_file(q{Changes})));'

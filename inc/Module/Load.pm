@@ -1,7 +1,7 @@
 #line 1
 package Module::Load;
 
-$VERSION = '0.16';
+$VERSION = '0.12';
 
 use strict;
 use File::Spec ();
@@ -31,17 +31,18 @@ sub load (*;@)  {
             die $err if $err;
         }
     }
-    
-    ### This addresses #41883: Module::Load cannot import 
-    ### non-Exporter module. ->import() routines weren't
-    ### properly called when load() was used.
-    {   no strict 'refs';
-        my $import;
-        if (@_ and $import = $mod->can('import')) {
-            unshift @_, $mod;
-            goto &$import;
-        }
-    }
+    __PACKAGE__->_export_to_level(1, $mod, @_) if @_;
+}
+
+### 5.004's Exporter doesn't have export_to_level.
+### Taken from Michael Schwerns Test::More and slightly modified
+sub _export_to_level {
+    my $pkg     = shift;
+    my $level   = shift;
+    my $mod     = shift;
+    my $callpkg = caller($level);
+
+    $mod->export($callpkg, @_);
 }
 
 sub _to_file{
@@ -82,4 +83,4 @@ sub _is_file {
 
 __END__
 
-#line 181
+#line 182
