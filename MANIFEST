@@ -29,6 +29,7 @@ inc/Test/Builder/Module.pm
 inc/Test/Class.pm
 inc/Test/Exception.pm
 inc/Test/More.pm
+inc/Test/Requires.pm
 inc/Test/Warn.pm
 lib/MooseX/Types/Locale/Country.pm
 lib/MooseX/Types/Locale/Country/Fast.pm
