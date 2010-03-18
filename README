@@ -35,16 +35,15 @@ See further document of this distribution by the following commands:
 AUTHOR
 ------
 
-MORIYA Masaki (a.k.a. Gardejo)
+MORIYA Masaki, alias Gardejo
 
     <moriya at cpan dot org>,
-    http://ttt.ermitejo.com/
+    http://gardejo.org/
 
 COPYRIGHT AND LICENSE
 ---------------------
 
-Copyright (c) 2009-2010 by MORIYA Masaki (a.k.a. Gardejo),
-http://ttt.ermitejo.com/
+Copyright (c) 2009-2010 MORIYA Masaki, alias Gardejo
 
 This library is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
