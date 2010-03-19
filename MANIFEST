@@ -1,12 +1,11 @@
 .gitignore
 Changes
-coverage.bat
-coverage.sh
 examples/alpha2.pl
 examples/alpha3.pl
 examples/complex.pl
 examples/name.pl
 examples/numeric.pl
+inc/Algorithm/C3.pm
 inc/Class/C3.pm
 inc/Class/C3/next.pm
 inc/Module/Install.pm
@@ -20,7 +19,6 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-inc/mro.pm
 inc/MRO/Compat.pm
 inc/Sub/Uplevel.pm
 inc/Test/Builder/Module.pm

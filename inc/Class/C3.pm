@@ -5,7 +5,7 @@ package Class::C3;
 use strict;
 use warnings;
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 our $C3_IN_CORE;
 our $C3_XS;
@@ -220,4 +220,4 @@ elsif($C3_XS) {
 
 __END__
 
-#line 576
+#line 582
