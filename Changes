@@ -5,6 +5,22 @@ This file documents the revision history for Perl distribution
 VERSION HISTORY
 ===============
 
+0.05 : Released on 2013-12-25 (JST)
+-----------------------------------
+
+Codes have no changes.
+
+### Bug fixes
+
+#### Packaging
+
+-   The package no longer includes test modules.
+    They caused a failure of the tests.
+    It is concerned with RT #89913 (by Poul Henning Sørensen), #91051
+    (by Slaven Rezić) and #91581 (by Caleb Cushing).
+    Thank you for your contributions.
+
+
 0.04 : Released on 2010-03-20 (JST)
 -----------------------------------
 
@@ -14,8 +30,9 @@ Codes have no changes.
 
 #### Packaging
 
--   Resolve superfluous dependencies on test related module `mro`.
-    It is concerned with RT #55482.
+-   Remove superfluous dependency `mro` which related to `Test::Class`
+    (`MRO::Compat`).
+    This problem is concerned with RT #55482.
 
 ### Refactoring
 

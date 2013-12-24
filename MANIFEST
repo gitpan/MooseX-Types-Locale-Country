@@ -5,9 +5,6 @@ examples/alpha3.pl
 examples/complex.pl
 examples/name.pl
 examples/numeric.pl
-inc/Algorithm/C3.pm
-inc/Class/C3.pm
-inc/Class/C3/next.pm
 inc/Module/Install.pm
 inc/Module/Install/AuthorRequires.pm
 inc/Module/Install/AuthorTests.pm
@@ -19,15 +16,6 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-inc/MRO/Compat.pm
-inc/Sub/Uplevel.pm
-inc/Test/Builder/Module.pm
-inc/Test/Class.pm
-inc/Test/Class/MethodInfo.pm
-inc/Test/Exception.pm
-inc/Test/Requires.pm
-inc/Test/Warn.pm
-inc/Tree/DAG_Node.pm
 lib/MooseX/Types/Locale/Country.pm
 lib/MooseX/Types/Locale/Country/Fast.pm
 LICENSE
@@ -35,6 +23,8 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
+MYMETA.json
+MYMETA.yml
 README
 t/00_normal.t
 t/01_normal_getopt.t
